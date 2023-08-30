@@ -20,7 +20,11 @@ let package = Package(
     ],
     dependencies: [
         // Depend on the latest Swift 5.9 prerelease of SwiftSyntax
-        .package(url: "https://github.com/apple/swift-syntax.git", from: "509.0.0-swift-5.9-DEVELOPMENT-SNAPSHOT-2023-04-25-b"),
+      //  "509.0.0-swift-DEVELOPMENT-SNAPSHOT-2023-08-07-a"
+      .package(
+        url: "https://github.com/apple/swift-syntax.git",
+        from: "509.0.0-swift-DEVELOPMENT-SNAPSHOT-2023-08-07-a"
+      ),
     ],
     targets: [
         // Macro implementation that performs the source transformation of a macro.

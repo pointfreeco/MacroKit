@@ -22,7 +22,6 @@ final class UnkeyedCodableMacroTests: XCTestCase {
             }
             """,
             expandedSource: """
-            
             public struct Foo {
                 var a: String
                 private var b: Int = 42
@@ -30,15 +29,19 @@ final class UnkeyedCodableMacroTests: XCTestCase {
                 var b2: Int {
                     return b + 1
                 }
+
                 public init(from decoder: Decoder) throws {
                     var container = try decoder.unkeyedContainer()
                     self.a = try container.decode(String.self)
                     self.b = try container.decode(Int.self)
+                    self.b2 = try container.decode(Int.self)
                 }
+
                 public func encode(to encoder: Encoder) throws {
                     var container = encoder.unkeyedContainer()
                     try container.encode(self.a)
                     try container.encode(self.b)
+                    try container.encode(self.b2)
                 }
             }
             """,

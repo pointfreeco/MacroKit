@@ -12,7 +12,7 @@ extension DeclGroupSyntax {
     public var initializers: [InitializerDeclSyntax] {
         return memberBlock.members.compactMap({ $0.decl.as(InitializerDeclSyntax.self) })
     }
-    public var associatedTypes: [AssociatedtypeDeclSyntax] {
+  public var associatedTypes: [AssociatedTypeDeclSyntax] {
         return memberBlock.members.compactMap({ $0.decl.as(AssociatedtypeDeclSyntax.self) })
     }
 }
@@ -43,7 +43,7 @@ extension FunctionParameterListSyntax {
     public var typesWithoutAttribues: [TypeSyntax] {
         return types.map { type in
             if let type = type.as(AttributedTypeSyntax.self) {
-                return type.with(\.attributes, nil).baseType
+              return type.with(\.attributes, []).baseType
             } else {
                 return type
             }

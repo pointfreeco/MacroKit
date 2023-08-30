@@ -1,12 +1,12 @@
 extension VariableDeclSyntax {
     public var isComputed: Bool {
-        return bindings.contains(where: { $0.accessor?.is(CodeBlockSyntax.self) == true })
+      return bindings.contains(where: { $0.accessorBlock?.is(CodeBlockSyntax.self) == true })
     }
     public var isStored: Bool {
         return !isComputed
     }
     public var isStatic: Bool {
-        return modifiers?.lazy.contains(where: { $0.name.tokenKind == .keyword(.static) }) == true
+      return modifiers.lazy.contains(where: { $0.name.tokenKind == .keyword(.static) }) == true
     }
     public var identifier: TokenSyntax {
         return bindings.lazy.compactMap({ $0.pattern.as(IdentifierPatternSyntax.self) }).first!.identifier
@@ -23,11 +23,11 @@ extension VariableDeclSyntax {
     public var effectSpecifiers: AccessorEffectSpecifiersSyntax? {
         return bindings
             .lazy
-            .compactMap(\.accessor)
+            .compactMap(\.accessorBlock?.accessors)
             .compactMap({ accessor in
                 switch accessor {
                 case .accessors(let syntax):
-                    return syntax.accessors.lazy.compactMap(\.effectSpecifiers).first
+                  return syntax.lazy.compactMap(\.effectSpecifiers).first
                 case .getter:
                     return nil
                 }
@@ -36,11 +36,11 @@ extension VariableDeclSyntax {
     }
     public var isThrowing: Bool {
         return bindings
-            .compactMap(\.accessor)
+        .compactMap(\.accessorBlock?.accessors)
             .contains(where: { accessor in
                 switch accessor {
                 case .accessors(let syntax):
-                    return syntax.accessors.contains(where: { $0.effectSpecifiers?.throwsSpecifier != nil })
+                    return syntax.contains(where: { $0.effectSpecifiers?.throwsSpecifier != nil })
                 case .getter:
                     return false
                 }
@@ -48,11 +48,11 @@ extension VariableDeclSyntax {
     }
     public var isAsync: Bool {
         return bindings
-            .compactMap(\.accessor)
+            .compactMap(\.accessorBlock?.accessors)
             .contains(where: { accessor in
                 switch accessor {
                 case .accessors(let syntax):
-                    return syntax.accessors.contains(where: { $0.effectSpecifiers?.asyncSpecifier != nil })
+                    return syntax.lazy.contains(where: { $0.effectSpecifiers?.asyncSpecifier != nil })
                 case .getter:
                     return false
                 }
@@ -63,16 +63,16 @@ extension VariableDeclSyntax {
         get {
             return bindings
                 .lazy
-                .compactMap(\.accessor)
+                .compactMap(\.accessorBlock?.accessors)
                 .compactMap { accessor in
                     switch accessor {
                     case .getter(let body):
-                        var getter = AccessorDeclSyntax(accessorKind: .keyword(.get), body: body)
+                      var getter = AccessorDeclSyntax(accessorSpecifier: .keyword(.get), body: CodeBlockSyntax(body))
                         getter.modifier = DeclModifierSyntax(name: TokenSyntax(stringLiteral: accessLevel.rawValue))
                         return getter
 
                     case .accessors(let block):
-                        return block.accessors.first(where: { $0.accessorKind.tokenKind == .keyword(.get) })?.trimmed
+                      return block.lazy.first(where: { $0.accessorSpecifier.tokenKind == .keyword(.get) })?.trimmed
                     }
                 }
                 .first
@@ -81,90 +81,94 @@ extension VariableDeclSyntax {
             guard let newValue else { fatalError("Removing getters is not supported") }
 
             for (x, var binding) in bindings.enumerated() {
-                guard var accessor = binding.accessor else { continue }
+              guard var accessor = binding.accessorBlock?.accessors else { continue }
 
                 switch accessor {
                 case .getter:
-                    accessor = .accessors(.init(accessors: [newValue]))
-                    binding.accessor = accessor
+                  accessor = .accessors(.init([newValue]))
+                  binding.accessorBlock?.accessors = accessor
                     bindings = bindings.replacing(childAt: x, with: binding)
                     return
 
                 case .accessors(var block):
-                    var update = block.accessors
-                    for (index, accessor) in block.accessors.enumerated() {
-                        if accessor.accessorKind.tokenKind == .keyword(.get) {
-                            update = update.replacing(childAt: index, with: newValue)
+                    var update = Array(block.lazy)
+                    for (index, accessor) in block.lazy.enumerated() {
+                      if accessor.accessorSpecifier.tokenKind == .keyword(.get) {
+                        update[index] = newValue
+//                            update = update.replacing(childAt: index, with: newValue)
                         } else {
-                            update = update.replacing(childAt: index, with: accessor.trimmed)
+                          update[index] = accessor.trimmed
+//                            update = update.replacing(childAt: index, with: accessor.trimmed)
                         }
                     }
 
-                    block.accessors = update
+                  block = .init(update)
                     accessor = .accessors(block)
-                    binding.accessor = accessor
+                  binding.accessorBlock?.accessors = accessor
                     bindings = bindings.replacing(childAt: x, with: binding)
                     return
                 }
             }
 
-            let first = bindings.first!.with(\.accessor, .accessors(.init(accessors: [newValue])))
-            bindings = bindings.replacing(childAt: 0, with: first)
+          bindings[bindings.startIndex].accessorBlock?.accessors = .accessors([newValue])
         }
     }
     public var setter: AccessorDeclSyntax? {
         get {
             return bindings
                 .lazy
-                .compactMap(\.accessor)
+                .compactMap(\.accessorBlock?.accessors)
                 .compactMap { accessor in
                     switch accessor {
                     case .getter:
                         return nil
 
                     case .accessors(let block):
-                        return block.accessors.first(where: { $0.accessorKind.tokenKind == .keyword(.set) })?.trimmed
+                      return block.lazy.first(where: { $0.accessorSpecifier.tokenKind == .keyword(.set) })?.trimmed
                     }
                 }
                 .first
         }
         set {
             for (x, var binding) in bindings.enumerated() {
-                guard var accessor = binding.accessor else { continue }
+              guard var accessor = binding.accessorBlock?.accessors else { continue }
 
                 switch accessor {
                 case .getter(let body):
                     guard let newValue else { return }
 
-                    accessor = .accessors(.init(accessors: [
-                        AccessorDeclSyntax(accessorKind: .keyword(.get), body: body),
+                  accessor = .accessors(.init([
+                    AccessorDeclSyntax(accessorSpecifier: .keyword(.get), body: .init(statements: body)),
                         newValue
                     ]))
-                    binding.accessor = accessor
+                  binding.accessorBlock?.accessors = accessor
                     bindings = bindings.replacing(childAt: x, with: binding)
                     return
 
                 case .accessors(var block):
-                    var update = block.accessors
-                    for (index, accessor) in block.accessors.enumerated() {
+                    var update = Array(block.lazy)
+                    for (index, accessor) in block.lazy.enumerated() {
                         if accessor.accessorKind.tokenKind == .keyword(.set) {
                             if let newValue {
-                                update = update.replacing(childAt: index, with: newValue)
+                              update[index] = newValue
+//                                update = update.replacing(childAt: index, with: newValue)
                             } else {
-                                update = update.removing(childAt: index)
+                              update.remove(at: index)
+//                                update = update.removing(childAt: index)
                             }
                         } else {
-                            update = update.replacing(childAt: index, with: accessor.trimmed)
+                          update[index] = accessor.trimmed
+//                            update = update.replacing(childAt: index, with: accessor.trimmed)
                         }
                     }
 
                     if update.count == 1, let newValue {
-                        update = update.appending(newValue)
+                        update = update + [newValue]
                     }
 
-                    block.accessors = update
+                  block = .init(update)
                     accessor = .accessors(block)
-                    binding.accessor = accessor
+                  binding.accessorBlock?.accessors = accessor
                     bindings = bindings.replacing(childAt: x, with: binding)
                     return
                 }

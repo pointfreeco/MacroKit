@@ -88,8 +88,8 @@ public struct GenerateMockMacro: PeerMacro {
                         })
                 }
 
-                MemberDeclListSyntax(properties)
-                MemberDeclListSyntax(functions)
+              MemberBlockItemListSyntax(properties)
+              MemberBlockItemListSyntax(functions)
             }
         )
 
@@ -103,25 +103,58 @@ public struct GenerateMockMacro: PeerMacro {
 
 private extension VariableDeclSyntax {
     /// Take a `VariableDeclSyntax` from the source protocol and add `AccessorDeclSyntax`s for the getter and, if needed, setter
-    var mockProperty: VariableDeclSyntax {
-        var newProperty = trimmed
-        var binding = newProperty.bindings.first!
-        let accessor = binding.accessor!.as(AccessorBlockSyntax.self)!
-        var getter = accessor.accessors.first!.trimmed
-        getter.body = CodeBlockSyntax {
-            DeclSyntax("\(raw: getter.effectSpecifiers?.throwsSpecifier != nil ? "try " : "")mocks.\(raw: newProperty.identifier.text).getter()")
-        }
+  var mockProperty: VariableDeclSyntax {
+    var newProperty = trimmed
+    var binding = newProperty.bindings.first!
+    let accessor = binding.accessorBlock!.as(AccessorBlockSyntax.self)!
 
-        var accessors: [AccessorDeclSyntax] = [getter]
-        if getter.effectSpecifiers == nil {
-            accessors.append("set { mocks.\(raw: identifier.text).setter(newValue) }")
-        }
+    guard
+      case var .accessors(accessors) = accessor.accessors.trimmed,
+      var getter = accessors.first
+    else { fatalError() }
 
-        binding.accessor = .accessors(.init(accessors: .init(accessors)))
-        newProperty.accessLevel = .open
-        newProperty.bindings = newProperty.bindings.replacing(childAt: 0, with: binding)
-        return newProperty.trimmed
+    getter.body = CodeBlockSyntax {
+      DeclSyntax("\(raw: getter.effectSpecifiers?.throwsSpecifier != nil ? "try " : "")mocks.\(raw: newProperty.identifier.text).getter()")
     }
+
+    accessors = [getter]
+    if getter.effectSpecifiers == nil {
+      accessors.append("set { mocks.\(raw: identifier.text).setter(newValue) }")
+    }
+
+    binding.accessorBlock?.accessors = .accessors(accessors)
+    newProperty.accessLevel = .open
+    newProperty.bindings[newProperty.bindings.startIndex] = binding
+    return newProperty.trimmed
+  }
+
+//  {
+//        var newProperty = trimmed
+//        var binding = newProperty.bindings.first!
+//      let accessor = binding.accessorBlock!.as(AccessorBlockSyntax.self)!
+//      var getter = accessor.accessors.trimmed
+//
+////      getter = .accessors(
+////        AccessorDeclListSyntax {
+////          AccessorDeclListSyntax(
+////            CodeBlockSyntax {
+////              DeclSyntax("\(raw: self.effectSpecifiers?.throwsSpecifier != nil ? "try " : "")mocks.\(raw: newProperty.identifier.text).getter()")
+////            }
+////          )!
+////        }
+////      )
+////
+////
+////        var accessors: [AccessorDeclSyntax] = [getter]
+////        if getter.effectSpecifiers == nil {
+////            accessors.append("set { mocks.\(raw: identifier.text).setter(newValue) }")
+////        }
+////
+////        binding.accessor = .accessors(.init(accessors: .init(accessors)))
+////        newProperty.accessLevel = .open
+////        newProperty.bindings = newProperty.bindings.replacing(childAt: 0, with: binding)
+//        return newProperty.trimmed
+//    }
 }
 
 private extension FunctionDeclSyntax {
@@ -130,10 +163,10 @@ private extension FunctionDeclSyntax {
 
         var newSignature = signature
         var params: [String] = []
-        for (x, param) in signature.input.parameterList.enumerated() {
+      for (x, param) in signature.parameterClause.parameters.enumerated() {
             var newParam = param
             newParam.secondName = "arg\(raw: x)"
-            newSignature.input.parameterList = newSignature.input.parameterList.replacing(childAt: x, with: newParam)
+        newSignature.parameterClause.parameters = newSignature.parameterClause.parameters.replacing(childAt: x, with: newParam)
 
             params.append("arg\(x)")
         }
@@ -141,7 +174,7 @@ private extension FunctionDeclSyntax {
         newFunction.signature = newSignature
         newFunction.accessLevel = .open
         newFunction.body = CodeBlockSyntax {
-            DeclSyntax("return \(raw: isThrowing ? "try " : "")mocks.\(raw: identifier.text).execute((\(raw: params.joined(separator: ", "))))")
+          DeclSyntax("return \(raw: isThrowing ? "try " : "")mocks.\(raw: name.text).execute((\(raw: params.joined(separator: ", "))))")
         }
         return newFunction
     }
@@ -155,17 +188,17 @@ private extension VariableDeclSyntax {
 }
 private extension FunctionDeclSyntax {
     var returnTypeOrVoid: DeclSyntax {
-        if isThrowing { return "Result<\(raw: returnOrVoid.returnType), Error>" }
-        else { return "\(raw: returnOrVoid.returnType)" }
+      if isThrowing { return "Result<\(raw: returnOrVoid.type), Error>" }
+      else { return "\(raw: returnOrVoid.type)" }
     }
 }
-private extension AssociatedtypeDeclSyntax {
+private extension AssociatedTypeDeclSyntax {
     var genericParameter: GenericParameterSyntax {
-        let type = self.inheritanceClause?.inheritedTypeCollection.first
+      let type = self.inheritanceClause?.inheritedTypes.first
         
         return GenericParameterSyntax(
             attributes: attributes,
-            name: identifier,
+            name: name,
             colon: type.map { _ in .colonToken() },
             inheritedType: type.map { TypeSyntax("\(raw: $0)") }
         )

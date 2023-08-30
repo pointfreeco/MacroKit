@@ -25,9 +25,14 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                var property: String {
+                    get
+                }
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -36,14 +41,14 @@ final class GenerateMockMacroTests: XCTestCase {
                 public init() {
                 }
                 open var property: String {
-                    get {
-                        mocks.property.getter()
+                    get {mocks.property.getter()
                     }
                     set {
                         mocks.property.setter(newValue)
                     }
-                }
+                    }
             }
+
             #endif
             """,
             macros: testMacros
@@ -63,9 +68,14 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                var property: String {
+                    get throws
+                }
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -74,11 +84,11 @@ final class GenerateMockMacroTests: XCTestCase {
                 public init() {
                 }
                 open var property: String {
-                    get throws {
-                        try mocks.property.getter()
+                    get throws {try mocks.property.getter()
                     }
-                }
+                    }
             }
+
             #endif
             """,
             macros: testMacros
@@ -98,9 +108,14 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                var property: String {
+                    get async
+                }
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -109,11 +124,11 @@ final class GenerateMockMacroTests: XCTestCase {
                 public init() {
                 }
                 open var property: String {
-                    get async {
-                        mocks.property.getter()
+                    get async {mocks.property.getter()
                     }
-                }
+                    }
             }
+
             #endif
             """,
             macros: testMacros
@@ -133,9 +148,14 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                var property: String {
+                    get async throws
+                }
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -144,11 +164,11 @@ final class GenerateMockMacroTests: XCTestCase {
                 public init() {
                 }
                 open var property: String {
-                    get async throws {
-                        try mocks.property.getter()
+                    get async throws {try mocks.property.getter()
                     }
-                }
+                    }
             }
+
             #endif
             """,
             macros: testMacros
@@ -169,9 +189,15 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                var property: String {
+                    get
+                    set
+                }
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -180,14 +206,14 @@ final class GenerateMockMacroTests: XCTestCase {
                 public init() {
                 }
                 open var property: String {
-                    get {
-                        mocks.property.getter()
+                    get {mocks.property.getter()
                     }
                     set {
                         mocks.property.setter(newValue)
                     }
-                }
+                    }
             }
+
             #endif
             """,
             macros: testMacros
@@ -208,9 +234,14 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                var property: () -> Void {
+                    get
+                }
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -219,14 +250,14 @@ final class GenerateMockMacroTests: XCTestCase {
                 public init() {
                 }
                 open var property: () -> Void {
-                    get {
-                        mocks.property.getter()
+                    get {mocks.property.getter()
                     }
                     set {
                         mocks.property.setter(newValue)
                     }
-                }
+                    }
             }
+
             #endif
             """,
             macros: testMacros
@@ -246,9 +277,14 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                var property: (Int) -> Void {
+                    get
+                }
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -257,14 +293,14 @@ final class GenerateMockMacroTests: XCTestCase {
                 public init() {
                 }
                 open var property: (Int) -> Void {
-                    get {
-                        mocks.property.getter()
+                    get {mocks.property.getter()
                     }
                     set {
                         mocks.property.setter(newValue)
                     }
-                }
+                    }
             }
+
             #endif
             """,
             macros: testMacros
@@ -284,9 +320,14 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                var property: (Int, Bool) -> Void {
+                    get
+                }
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -295,14 +336,14 @@ final class GenerateMockMacroTests: XCTestCase {
                 public init() {
                 }
                 open var property: (Int, Bool) -> Void {
-                    get {
-                        mocks.property.getter()
+                    get {mocks.property.getter()
                     }
                     set {
                         mocks.property.setter(newValue)
                     }
-                }
+                    }
             }
+
             #endif
             """,
             macros: testMacros
@@ -323,9 +364,14 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                var property: (Int, Bool) throws -> Void {
+                    get
+                }
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -334,14 +380,14 @@ final class GenerateMockMacroTests: XCTestCase {
                 public init() {
                 }
                 open var property: (Int, Bool) throws -> Void {
-                    get {
-                        mocks.property.getter()
+                    get {mocks.property.getter()
                     }
                     set {
                         mocks.property.setter(newValue)
                     }
-                }
+                    }
             }
+
             #endif
             """,
             macros: testMacros
@@ -361,9 +407,14 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                var property: (Int, Bool) async throws -> Void {
+                    get
+                }
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -372,14 +423,14 @@ final class GenerateMockMacroTests: XCTestCase {
                 public init() {
                 }
                 open var property: (Int, Bool) async throws -> Void {
-                    get {
-                        mocks.property.getter()
+                    get {mocks.property.getter()
                     }
                     set {
                         mocks.property.setter(newValue)
                     }
-                }
+                    }
             }
+
             #endif
             """,
             macros: testMacros
@@ -398,9 +449,12 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                func function()
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -408,10 +462,10 @@ final class GenerateMockMacroTests: XCTestCase {
                 }
                 public init() {
                 }
-                open func function() {
-                    return mocks.function.execute(())
+                open func function() {return mocks.function.execute(())
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -429,9 +483,12 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                func function() -> Void
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -439,10 +496,10 @@ final class GenerateMockMacroTests: XCTestCase {
                 }
                 public init() {
                 }
-                open func function() -> Void {
-                    return mocks.function.execute(())
+                open func function() -> Void {return mocks.function.execute(())
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -460,9 +517,12 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                func function(value: Int)
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -470,10 +530,10 @@ final class GenerateMockMacroTests: XCTestCase {
                 }
                 public init() {
                 }
-                open func function(value arg0: Int) {
-                    return mocks.function.execute((arg0))
+                open func function(value arg0: Int) {return mocks.function.execute((arg0))
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -491,9 +551,12 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                func function(value: Int) -> Void
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -501,10 +564,10 @@ final class GenerateMockMacroTests: XCTestCase {
                 }
                 public init() {
                 }
-                open func function(value arg0: Int) -> Void {
-                    return mocks.function.execute((arg0))
+                open func function(value arg0: Int) -> Void {return mocks.function.execute((arg0))
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -523,9 +586,12 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                func function(_ value: Int) -> Bool
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -533,10 +599,10 @@ final class GenerateMockMacroTests: XCTestCase {
                 }
                 public init() {
                 }
-                open func function(_ arg0: Int) -> Bool {
-                    return mocks.function.execute((arg0))
+                open func function(_ arg0: Int) -> Bool {return mocks.function.execute((arg0))
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -554,9 +620,12 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                func function(with value: Int) -> Bool
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -564,10 +633,10 @@ final class GenerateMockMacroTests: XCTestCase {
                 }
                 public init() {
                 }
-                open func function(with arg0: Int) -> Bool {
-                    return mocks.function.execute((arg0))
+                open func function(with arg0: Int) -> Bool {return mocks.function.execute((arg0))
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -586,9 +655,12 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                func function(_ value: Int) -> () -> Void
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -596,10 +668,10 @@ final class GenerateMockMacroTests: XCTestCase {
                 }
                 public init() {
                 }
-                open func function(_ arg0: Int) -> () -> Void {
-                    return mocks.function.execute((arg0))
+                open func function(_ arg0: Int) -> () -> Void {return mocks.function.execute((arg0))
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -617,9 +689,12 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                func function(_ value: Int) -> (Bool) -> Void
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -627,10 +702,10 @@ final class GenerateMockMacroTests: XCTestCase {
                 }
                 public init() {
                 }
-                open func function(_ arg0: Int) -> (Bool) -> Void {
-                    return mocks.function.execute((arg0))
+                open func function(_ arg0: Int) -> (Bool) -> Void {return mocks.function.execute((arg0))
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -649,9 +724,12 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                func function() throws
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -659,10 +737,10 @@ final class GenerateMockMacroTests: XCTestCase {
                 }
                 public init() {
                 }
-                open func function() throws {
-                    return try mocks.function.execute(())
+                open func function() throws {return try mocks.function.execute(())
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -680,9 +758,12 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                func function() async
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -690,10 +771,10 @@ final class GenerateMockMacroTests: XCTestCase {
                 }
                 public init() {
                 }
-                open func function() async {
-                    return mocks.function.execute(())
+                open func function() async {return mocks.function.execute(())
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -711,9 +792,12 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                func function() async throws
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -721,10 +805,10 @@ final class GenerateMockMacroTests: XCTestCase {
                 }
                 public init() {
                 }
-                open func function() async throws {
-                    return try mocks.function.execute(())
+                open func function() async throws {return try mocks.function.execute(())
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -742,9 +826,12 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                func function(with value: Bool) async throws -> String
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -752,10 +839,10 @@ final class GenerateMockMacroTests: XCTestCase {
                 }
                 public init() {
                 }
-                open func function(with arg0: Bool) async throws -> String {
-                    return try mocks.function.execute((arg0))
+                open func function(with arg0: Bool) async throws -> String {return try mocks.function.execute((arg0))
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -774,9 +861,12 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                func function(_ closure: @Sendable @escaping (Bool) -> Void) async throws -> String
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -784,10 +874,10 @@ final class GenerateMockMacroTests: XCTestCase {
                 }
                 public init() {
                 }
-                open func function(_ arg0: @Sendable @escaping (Bool) -> Void) async throws -> String {
-                    return try mocks.function.execute((arg0))
+                open func function(_ arg0: @Sendable @escaping (Bool) -> Void) async throws -> String {return try mocks.function.execute((arg0))
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -810,9 +900,16 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                associatedtype Value
 
-            \(proto)
+                var property: Value {
+                    get
+                }
+            }
+
             #if DEBUG
+
             open class TestProtocolMock<Value>: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -821,14 +918,14 @@ final class GenerateMockMacroTests: XCTestCase {
                 public init() {
                 }
                 open var property: Value {
-                    get {
-                        mocks.property.getter()
+                    get {mocks.property.getter()
                     }
                     set {
                         mocks.property.setter(newValue)
                     }
-                }
+                    }
             }
+
             #endif
             """,
             macros: testMacros
@@ -850,9 +947,16 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                associatedtype Value: Codable
 
-            \(proto)
+                var property: Value {
+                    get
+                }
+            }
+
             #if DEBUG
+
             open class TestProtocolMock<Value: Codable>: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -861,14 +965,14 @@ final class GenerateMockMacroTests: XCTestCase {
                 public init() {
                 }
                 open var property: Value {
-                    get {
-                        mocks.property.getter()
+                    get {mocks.property.getter()
                     }
                     set {
                         mocks.property.setter(newValue)
                     }
-                }
+                    }
             }
+
             #endif
             """,
             macros: testMacros
@@ -887,9 +991,13 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol {
+                associatedtype Foo
+                associatedtype Bar: Codable
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock<Foo, Bar: Codable>: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -897,6 +1005,7 @@ final class GenerateMockMacroTests: XCTestCase {
                 public init() {
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -917,9 +1026,14 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol: Equatable {
+                var property: String {
+                    get
+                }
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol, Equatable {
                 public let mocks = Members()
                 public class Members {
@@ -928,14 +1042,14 @@ final class GenerateMockMacroTests: XCTestCase {
                 public init() {
                 }
                 open var property: String {
-                    get {
-                        mocks.property.getter()
+                    get {mocks.property.getter()
                     }
                     set {
                         mocks.property.setter(newValue)
                     }
-                }
+                    }
             }
+
             #endif
             """,
             macros: testMacros
@@ -955,9 +1069,14 @@ final class GenerateMockMacroTests: XCTestCase {
             \(proto)
             """,
             expandedSource: """
+            protocol TestProtocol: Equatable, Codable {
+                var property: String {
+                    get
+                }
+            }
 
-            \(proto)
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol, Equatable, Codable {
                 public let mocks = Members()
                 public class Members {
@@ -966,14 +1085,14 @@ final class GenerateMockMacroTests: XCTestCase {
                 public init() {
                 }
                 open var property: String {
-                    get {
-                        mocks.property.getter()
+                    get {mocks.property.getter()
                     }
                     set {
                         mocks.property.setter(newValue)
                     }
-                }
+                    }
             }
+
             #endif
             """,
             macros: testMacros

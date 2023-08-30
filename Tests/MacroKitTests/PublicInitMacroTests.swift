@@ -22,7 +22,6 @@ final class PublicInitMacroTests: XCTestCase {
             }
             """,
             expandedSource: """
-            
             public struct Foo {
                 var a: String
                 private var b: Int = 42
@@ -30,12 +29,17 @@ final class PublicInitMacroTests: XCTestCase {
                 var b2: Int {
                     return b + 1
                 }
+
                 public init(
                     a: String,
-                    b: Int = 42
+                    b: Int = 42,
+                    b2: Int {
+                        return b + 1
+                    }
                 ) {
-                    self.a = a
-                    self.b = b
+                self.a = a
+                self.b = b
+                self.b2 = b2
                 }
             }
             """,

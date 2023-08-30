@@ -20,13 +20,12 @@ final class StaticMemberIterableMacroTests: XCTestCase {
             }
             """,
             expandedSource: #"""
-
             struct Foo {
                 private static var foo: String
                 static var bar: String
                 var florp: Int = 42
-                func qux() {
-                }
+                func qux() { }
+
                 internal static var allStaticMembers = [bar]
             }
             """#,

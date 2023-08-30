@@ -26,7 +26,7 @@ final class VariableDeclSyntaxTests: XCTestCase {
 
         XCTAssertNil(source.getter)
 
-        source.getter = AccessorDeclSyntax(accessorKind: .keyword(.get), body: CodeBlockSyntax {
+      source.getter = AccessorDeclSyntax(accessorSpecifier: .keyword(.get), body: CodeBlockSyntax {
             ReturnStmtSyntax(returnKeyword: .keyword(.return), expression: IntegerLiteralExprSyntax(42))
         })
 
@@ -46,7 +46,7 @@ final class VariableDeclSyntaxTests: XCTestCase {
 
         XCTAssertNotNil(source.getter)
 
-        source.getter = AccessorDeclSyntax(accessorKind: .keyword(.get), body: CodeBlockSyntax {
+      source.getter = AccessorDeclSyntax(accessorSpecifier: .keyword(.get), body: CodeBlockSyntax {
             ReturnStmtSyntax(returnKeyword: .keyword(.return), expression: IntegerLiteralExprSyntax(42))
         })
 
@@ -70,7 +70,7 @@ final class VariableDeclSyntaxTests: XCTestCase {
 
         XCTAssertNotNil(source.getter)
 
-        source.getter = AccessorDeclSyntax(accessorKind: .keyword(.get), body: CodeBlockSyntax {
+      source.getter = AccessorDeclSyntax(accessorSpecifier: .keyword(.get), body: CodeBlockSyntax {
             ReturnStmtSyntax(returnKeyword: .keyword(.return), expression: IntegerLiteralExprSyntax(42))
         })
 
@@ -95,7 +95,7 @@ final class VariableDeclSyntaxTests: XCTestCase {
 
         XCTAssertNotNil(source.getter)
 
-        source.getter = AccessorDeclSyntax(accessorKind: .keyword(.get), body: CodeBlockSyntax {
+      source.getter = AccessorDeclSyntax(accessorSpecifier: .keyword(.get), body: CodeBlockSyntax {
             ReturnStmtSyntax(returnKeyword: .keyword(.return), expression: IntegerLiteralExprSyntax(42))
         })
 
@@ -122,7 +122,7 @@ final class VariableDeclSyntaxTests: XCTestCase {
 
         XCTAssertNil(source.setter)
 
-        source.setter = AccessorDeclSyntax(accessorKind: .keyword(.set), body: CodeBlockSyntax {
+      source.setter = AccessorDeclSyntax(accessorSpecifier: .keyword(.set), body: CodeBlockSyntax {
             DeclSyntax("otherValue = newValue")
         })
 
@@ -131,8 +131,7 @@ final class VariableDeclSyntaxTests: XCTestCase {
             get {
                 1
             }
-            set {
-                otherValue = newValue
+            set {otherValue = newValue
             }
         }
         """)
@@ -149,7 +148,7 @@ final class VariableDeclSyntaxTests: XCTestCase {
 
         XCTAssertNil(source.setter)
 
-        source.setter = AccessorDeclSyntax(accessorKind: .keyword(.set), body: CodeBlockSyntax {
+      source.setter = AccessorDeclSyntax(accessorSpecifier: .keyword(.set), body: CodeBlockSyntax {
             DeclSyntax("otherValue = newValue")
         })
 
@@ -158,8 +157,7 @@ final class VariableDeclSyntaxTests: XCTestCase {
             get {
                 1
             }
-            set {
-                otherValue = newValue
+            set {otherValue = newValue
             }
         }
         """)
@@ -177,7 +175,7 @@ final class VariableDeclSyntaxTests: XCTestCase {
 
         XCTAssertNotNil(source.setter)
 
-        source.setter = AccessorDeclSyntax(accessorKind: .keyword(.set), body: CodeBlockSyntax {
+      source.setter = AccessorDeclSyntax(accessorSpecifier: .keyword(.set), body: CodeBlockSyntax {
             DeclSyntax("otherValue = newValue")
         })
 
@@ -186,8 +184,7 @@ final class VariableDeclSyntaxTests: XCTestCase {
             get {
                 1
             }
-            set {
-                otherValue = newValue
+            set {otherValue = newValue
             }
         }
         """)
