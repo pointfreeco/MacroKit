@@ -15,17 +15,24 @@ final class UnkeyedCodableMacroTests: XCTestCase {
             public struct Foo {
                 var a: String
                 private var b: Int = 42
-                var c = true
+                var c = true {
+                  didSet {}
+                  willSet {}
+                }
                 var b2: Int {
                     return b + 1
                 }
             }
             """,
             expandedSource: """
+            
             public struct Foo {
                 var a: String
                 private var b: Int = 42
-                var c = true
+                var c = true {
+                  didSet {}
+                  willSet {}
+                }
                 var b2: Int {
                     return b + 1
                 }
@@ -34,14 +41,12 @@ final class UnkeyedCodableMacroTests: XCTestCase {
                     var container = try decoder.unkeyedContainer()
                     self.a = try container.decode(String.self)
                     self.b = try container.decode(Int.self)
-                    self.b2 = try container.decode(Int.self)
                 }
 
                 public func encode(to encoder: Encoder) throws {
                     var container = encoder.unkeyedContainer()
                     try container.encode(self.a)
                     try container.encode(self.b)
-                    try container.encode(self.b2)
                 }
             }
             """,

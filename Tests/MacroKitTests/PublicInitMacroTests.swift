@@ -32,14 +32,10 @@ final class PublicInitMacroTests: XCTestCase {
 
                 public init(
                     a: String,
-                    b: Int = 42,
-                    b2: Int {
-                        return b + 1
-                    }
+                    b: Int = 42
                 ) {
-                self.a = a
-                self.b = b
-                self.b2 = b2
+                    self.a = a
+                    self.b = b
                 }
             }
             """,
